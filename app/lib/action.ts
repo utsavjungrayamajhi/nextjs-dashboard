@@ -68,7 +68,13 @@ export async function updateInvoice(id: string, formData: FormData) {
 }
 
 export async function deleteInvoice(id: string) {
-  throw new Error("Delete functionality is disabled for safety reasons.");
-  await sql`DELETE FROM invoices WHERE id = ${id}`;
+  try {
+    await sql`DELETE FROM invoices WHERE id = ${id}`;
+  } catch (err) {
+    console.error("Error deleting invoice:", err);
+    return {
+      message: "Failed to delete the invoice",
+    };
+  }
   revalidatePath("/dashboard/invoices");
 }
